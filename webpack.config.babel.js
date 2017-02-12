@@ -37,11 +37,11 @@ module.exports = {
     publicPath: '/dist/'
   },
   module: {
-    loaders: [
+    rules: [
       {
         test: /\.js$/,
         loader: 'babel-loader',
-        query: {
+        options: {
           cacheDirectory: true,
           comments: false
         }
@@ -49,8 +49,8 @@ module.exports = {
     ]
   },
   resolve: {
-    extensions: [ '', '.js' ],
-    root: [
+    extensions: [ '.js' ],
+    modules: [
       path.resolve(__dirname),
       path.join(__dirname, './client/js'),
       path.join(__dirname, './node_modules')
