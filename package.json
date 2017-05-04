@@ -1,10 +1,10 @@
 {
   "name": "vihta",
   "version": "1.0.0",
-  "description": "",
+  "description": "Photo sharing web application with 3D viewer",
   "main": "app.js",
   "scripts": {
-    "start": "node app.js",
+    "start": "npm run build & node app.js",
     "dev": "nodemon app.js",
     "build": "webpack",
     "watch": "NODE_ENV=development webpack --watch"
