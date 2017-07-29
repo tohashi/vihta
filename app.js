@@ -1,25 +1,25 @@
 'use strict';
 
-const koa = require('koa');
+const Koa = require('koa');
 const route = require('koa-route');
 const logger = require('koa-logger');
 const serve = require('koa-static')
 const ENV  = require('./env.js');
-const app = module.exports = koa();
+const app = module.exports = new Koa();
 const home = require('./controllers/home');
 const viewer = require('./controllers/viewer');
 const photos = require('./controllers/photos');
 
 app.use(logger());
 
-app.use(function *(next){
+app.use(async function(ctx, next){
   try {
-    yield next;
+    await next();
   } catch (err) {
     if (401 == err.status) {
-      this.status = 401;
-      this.set('WWW-Authenticate', 'Basic');
-      this.body = 'cant haz that';
+      ctx.status = 401;
+      ctx.set('WWW-Authenticate', 'Basic');
+      ctx.body = 'cant haz that';
     } else {
       throw err;
     }

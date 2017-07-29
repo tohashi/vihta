@@ -4,13 +4,13 @@ const ENV  = require('../env.js');
 const path = require('path');
 const parse = require('co-busboy');
 const monk = require('monk');
-const wrap = require('co-monk');
 const db = monk(ENV.MONGODB_URI);
 const Pass = require('stream').PassThrough;
 const gm = require('gm').subClass({ imageMagick: true });
 const AWS = require('aws-sdk');
+const convert = require('koa-convert');
 
-const photos = wrap(db.get('photos'));
+const photos = db.get('photos');
 
 AWS.config.region = 'ap-northeast-1';
 AWS.config.update({
@@ -29,22 +29,23 @@ const allowedExtensions = [
   '.JPG', '.JPEG', '.GIF', '.PNG'
 ];
 
-function *index(next) {
-  if (this.method !== 'GET') {
-    return yield next;
+async function index(ctx, next) {
+  if (ctx.method !== 'GET') {
+    return await next();
   }
   const query = Object.assign({
     skip: null,
     limit: null 
-  }, this.request.query);
+  }, ctx.request.query);
 
-  this.body = yield photos.find({}, {
+  ctx.body = await photos.find({}, {
     skip: parseInt(query.skip),
     limit: parseInt(query.limit),
     sort: { timestamp: -1 }
   });
 }
 
+// TODO replace co-busboy
 function *create(next) {
   if (this.method !== 'POST') {
     return yield next;
@@ -110,12 +111,12 @@ function *create(next) {
   this.body = data;
 }
 
-function *destroy(next) {
-  if (this.method !== 'DELETE') {
-    return yield next;
+async function destroy(ctx, next) {
+  if (ctx.method !== 'DELETE') {
+    return await next();
   }
-  yield photos.remove({ _id: this.request.query.id });
-  this.body = {};
+  await photos.remove({ _id: ctx.request.query.id });
+  ctx.body = {};
 }
 
 function uploadToS3(params) {
@@ -130,8 +131,8 @@ function uploadToS3(params) {
   });
 }
 
-
-
 module.exports = {
-  index, create, destroy
-}
+  index,
+  create: convert(create),
+  destroy
+};

@@ -2,11 +2,11 @@
 
 const render = require('../lib/render');
 
-function *index(next) {
-  if (this.method !== 'GET') {
-    return yield next;
+async function index(ctx, next) {
+  if (ctx.method !== 'GET') {
+    return await next();
   }
-  this.body = yield render('home');
+  ctx.body = await render('home');
 }
 
 module.exports = {
