@@ -2,11 +2,16 @@
 
 const webpack = require('webpack');
 const path = require('path');
+const env = require('./env');
 const NODE_ENV = JSON.stringify(process.env.NODE_ENV || 'production');
 
 const plugins = [
   new webpack.DefinePlugin({
-    'process.env': { NODE_ENV }
+    'process.env': {
+      NODE_ENV,
+      REGION: JSON.stringify(env.REGION),
+      BUCKET_NAME: JSON.stringify(env.BUCKET_NAME)
+    }
   })
 ];
 
