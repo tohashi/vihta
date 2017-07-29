@@ -28,7 +28,7 @@ export default class BaseLayout extends React.Component {
     return (
       <div>
         <AppBar
-          title="Wedding Photos"
+          title="vihta"
           style={{ position: 'fixed' }}
           onLeftIconButtonTouchTap={this.handleToggleDrawer.bind(this)}
         />
