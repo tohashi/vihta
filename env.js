@@ -3,5 +3,7 @@
 module.exports = Object.assign({
   PORT: 3333,
   MONGODB_URI: 'localhost/vihta',
-  BUCKET_NAME: 'vihta'
+  REGION: 'ap-northeast-1',
+  BUCKET_NAME: 'vihta',
+  NODE_ENV: 'production'
 }, process.env);
